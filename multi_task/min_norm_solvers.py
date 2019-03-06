@@ -39,18 +39,12 @@ class MinNormSolver:
         for i in range(len(vecs)):
             for j in range(i+1,len(vecs)):
                 if (i,j) not in dps:
-                    dps[(i, j)] = 0.0
-                    for k in range(len(vecs[i])):
-                        dps[(i,j)] += torch.dot(vecs[i][k], vecs[j][k]).data[0]
+                    dps[(i, j)] = torch.mm(vecs[i].transpose(1,0), vecs[j])
                     dps[(j, i)] = dps[(i, j)]
                 if (i,i) not in dps:
-                    dps[(i, i)] = 0.0
-                    for k in range(len(vecs[i])):
-                        dps[(i,i)] += torch.dot(vecs[i][k], vecs[i][k]).data[0]
+                    dps[(i, i)] = torch.mm(vecs[i].transpose(1, 0), vecs[i])
                 if (j,j) not in dps:
-                    dps[(j, j)] = 0.0   
-                    for k in range(len(vecs[i])):
-                        dps[(j, j)] += torch.dot(vecs[j][k], vecs[j][k]).data[0]
+                    dps[(j, j)] = torch.mm(vecs[j].transpose(1, 0), vecs[j])
                 c,d = MinNormSolver._min_norm_element_from2(dps[(i,i)], dps[(i,j)], dps[(j,j)])
                 if d < dmin:
                     dmin = d
