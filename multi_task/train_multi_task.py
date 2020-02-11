@@ -155,7 +155,7 @@ def train_multi_task(param_file):
                             if param.grad is not None:
                                 grads[t].append(Variable(param.grad.data.clone(), requires_grad=False))
 
-                # Normalize all gradients, this is optional and not included in the paper. See the notebook for details
+                # Normalize all gradients, this is optional and not included in the paper.
                 gn = gradient_normalizers(grads, loss_data, params['normalization_type'])
                 for t in tasks:
                     for gr_i in range(len(grads[t])):
