@@ -18,7 +18,6 @@ import types
 from tqdm import tqdm
 from tensorboardX import SummaryWriter
 
-from models.gradient_scaler import MinNormElement
 import losses
 import datasets
 import metrics
