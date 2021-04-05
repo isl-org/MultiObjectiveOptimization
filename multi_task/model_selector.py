@@ -11,12 +11,18 @@ def get_model(params):
     if 'mnist' in data:
         model = {}
         model['rep'] = MultiLeNetR()
+        if params['parallel']:
+            model['rep'] = nn.DataParallel(model['rep'])
         model['rep'].cuda()
         if 'L' in params['tasks']:
             model['L'] = MultiLeNetO()
+            if params['parallel']:
+                model['L'] = nn.DataParallel(model['L'])
             model['L'].cuda()
         if 'R' in params['tasks']:
             model['R'] = MultiLeNetO()
+            if params['parallel']:
+                model['R'] = nn.DataParallel(model['R'])
             model['R'].cuda()
         return model
 
@@ -25,15 +31,23 @@ def get_model(params):
         model['rep'] = get_segmentation_encoder() # SegnetEncoder()
         #vgg16 = model_collection.vgg16(pretrained=True)
         #model['rep'].init_vgg16_params(vgg16)
+        if params['parallel']:
+            model['rep'] = nn.DataParallel(model['rep'])
         model['rep'].cuda()
         if 'S' in params['tasks']:
             model['S'] = SegmentationDecoder(num_class=19, task_type='C')
+            if params['parallel']:
+                model['S'] = nn.DataParallel(model['S'])
             model['S'].cuda()
         if 'I' in params['tasks']:
             model['I'] = SegmentationDecoder(num_class=2, task_type='R')
+            if params['parallel']:
+                model['R'] = nn.DataParallel(model['R'])
             model['I'].cuda()
         if 'D' in params['tasks']:
             model['D'] = SegmentationDecoder(num_class=1, task_type='R')
+            if params['parallel']:
+                model['D'] = nn.DataParallel(model['D'])
             model['D'].cuda()
         return model
 
