@@ -3,6 +3,7 @@ from models.segnet import SegnetEncoder, SegnetInstanceDecoder, SegnetSegmentati
 from models.pspnet import SegmentationDecoder, get_segmentation_encoder
 from models.multi_faces_resnet import ResNet, FaceAttributeDecoder, BasicBlock
 import torchvision.models as model_collection
+import torch.nn as nn
 
 
 def get_model(params):
@@ -39,9 +40,13 @@ def get_model(params):
     if 'celeba' in data:
         model = {}
         model['rep'] = ResNet(BasicBlock, [2,2,2,2])
+        if params['parallel']:
+            model['rep'] = nn.DataParallel(model['rep'])
         model['rep'].cuda()
         for t in params['tasks']:
             model[t] = FaceAttributeDecoder()
+            if params['parallel']:
+                model[t] = nn.DataParallel(model[t])
             model[t].cuda()
         return model
 
